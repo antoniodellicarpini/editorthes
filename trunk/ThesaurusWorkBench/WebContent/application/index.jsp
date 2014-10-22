@@ -15,17 +15,20 @@
 <body>
 
 <div id="header">
-
-<select>	
-<% ArrayList elencoThes= (ArrayList) request.getAttribute("elenco_Thes"); %>
-<%   for (int i=0; i<elencoThes.size(); i++)
-   {
-	    
-   %>
-      <option value="<%= elencoThes.get(i)%>"> <%=elencoThes.get(i) %> </option>
-	    
-  <% }%>
-</select>
+<form method="post" action="/ThesaurusWorkBench/CtrlMain">
+	<select name="optionThes">	
+	<option value="default" selected=true> seleziona un thes </option>
+	<% if ( request.getAttribute("elenco_Thes")!=null) 
+		{		ArrayList elencoThes= (ArrayList) request.getAttribute("elenco_Thes"); %>
+	<%   		for (int i=0; i<elencoThes.size(); i++)
+	   			{  
+	   				%>
+	      		<option value="<%= elencoThes.get(i)%>"> <%=elencoThes.get(i) %> </option>    
+	  <% }
+	}%>
+	</select>
+	<input type ="submit" name="loadThes" value="Invio">
+</form>
 	<ul>
 		<li><a href="#">3 Column <span>prima voce</span></a></li>
 		<li><a href="#">3 Column <span>seconda voce</span></a></li>
@@ -43,8 +46,21 @@
 		</div>
 		<div class="col2">
 			<!-- Column 2 start -->
+			<% if( request.getAttribute("elencoConcept")!=null) 
+				{
+				 ArrayList elencoConcept= (ArrayList) request.getAttribute("elencoConcept");
+				 
+				 for (int i=0; i<elencoConcept.size(); i++)
+				   {  
+				 %>
+				 
+				 <p> <%= elencoConcept.get(i)%></p>
+				 <%
+					} 
+				 }%>
 			
-		   colonna 2
+			
+		   
 			<!-- Column 2 end -->
 		</div>
 	</div>
