@@ -35,19 +35,69 @@ public class CtrlMain extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		
-		
-			viewPage(request, response);
+
+		//String selectedValue[]=request.getParameterValues("option");
+		//System.out.println(selectedValue[0]);
+		  viewPage(request, response);
 			
 		
 	}
 
 	/**
+	 * @throws IOException 
+	 * @throws ServletException 
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		String selectedValue=request.getParameter("optionThes");
+		
+		if(!selectedValue.equals("default"))
+        {
+			System.out.println(selectedValue);
+			
+			 //Definizione di un oggetto della classe ServletContext
+			   ServletContext oContesto = getServletContext();
+			   //Definizione di un oggetto per la pubblicazione della JSP
+			   request.setAttribute("selectedValue",selectedValue);
+			   RequestDispatcher oDispatcher = oContesto.getRequestDispatcher("/CtrlConcept");
+			   oDispatcher.forward(request,response);
+           
+        }
+		
+		
 		// TODO Auto-generated method stub
+		/*String valoreScelto = request.getParameter("rdoScelta");
+		  if(valoreScelto!=null) {
+		   int scelta=Integer.parseInt(valoreScelto);
+		   String controller = null;
+		   switch(scelta) {
+		    case 0 : controller="/CtrlArchivioDocente";
+		      break;
+		    case 1 : controller="/CtrlArchivioStudente";
+		      break;
+		    case 2 : controller="";
+		      break;
+		    case 3 : controller="";
+		      break;
+		    case 4 : controller="";
+		      break;
+		    case 5 : controller="";
+		    break;
+		   }
+		   //Definizione di un oggetto della classe ServletContext
+		   ServletContext oContesto = getServletContext();
+		   //Definizione di un oggetto per la pubblicazione della JSP
+		   RequestDispatcher oDispatcher = oContesto.getRequestDispatcher(controller);
+		   oDispatcher.forward(request,response);
+		   }
+		  else visualizzaMenu(request,response);
+		*/
+		
 	}
+	
+	
+	
 	
 	
 	private void viewPage(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
@@ -55,7 +105,7 @@ public class CtrlMain extends HttpServlet {
 		ArrayList<String> elenco_Thes=new ArrayList<>();
 		elenco_Thes=thesaurus.elenco();
 		request.setAttribute("elenco_Thes", elenco_Thes);
-		    // TODO Auto-generated method stub
+		// TODO Auto-generated method stub
 			ServletContext oContesto = getServletContext();
 			RequestDispatcher oDispatcher = oContesto.getRequestDispatcher("/application/index.jsp");
 			oDispatcher.forward(request, response);		
