@@ -13,13 +13,18 @@
 	<link rel="stylesheet" type="text/css" href="application/css/screen.css" media="screen" />
 </head>
 <body>
+<jsp:useBean id="beanConcept" scope="session" class="model.session.concept">
+ <jsp:setProperty name="beanConcept" property="*" />
+</jsp:useBean>
 
 <div id="header">
+
 <form method="post" action="/ThesaurusWorkBench/CtrlMain">
 	<select name="optionThes">	
 	<option value="default" selected=true> seleziona un thes </option>
 	<% if ( request.getAttribute("elenco_Thes")!=null) 
 		{		ArrayList elencoThes= (ArrayList) request.getAttribute("elenco_Thes"); %>
+				
 	<%   		for (int i=0; i<elencoThes.size(); i++)
 	   			{  
 	   				%>
@@ -29,6 +34,7 @@
 	</select>
 	<input type ="submit" name="loadThes" value="Invio">
 </form>
+
 	<ul>
 		<li><a href="#">3 Column <span>prima voce</span></a></li>
 		<li><a href="#">3 Column <span>seconda voce</span></a></li>
@@ -41,10 +47,25 @@
 	<div class="colleft">
 		<div class="col1">
 			<!-- Column 1 start -->
-			<h1>colonna 1</h1>
+			
+			<p> <% if(beanConcept.getDescrittore()!=null)
+					{
+				%>  <%=beanConcept.getDescrittore() %>
+					<% }
+			else
+			{
+			%> Selezionare un descrittore
+				<%
+				}		%>
+					</p>
+		
+			
+			
 				<!-- Column 1 end -->
 		</div>
 		<div class="col2">
+		
+		<form method="post" action="/ThesaurusWorkBench/CtrlConcept">
 			<!-- Column 2 start -->
 			<% if( request.getAttribute("elencoConcept")!=null) 
 				{
@@ -54,12 +75,13 @@
 				   {  
 				 %>
 				 
-				 <p> <%= elencoConcept.get(i)%></p>
+		<input type ="submit" name="loadConcept" value="<%= elencoConcept.get(i)%>"> 
+		<br/> 
 				 <%
 					} 
 				 }%>
 			
-			
+			</form>
 		   
 			<!-- Column 2 end -->
 		</div>
