@@ -15,7 +15,6 @@ public class thesaurusSet {
 	public static ArrayList<String> elencoThes()  
 	{ 
 		
-		
         connection conn= connection.getInstance();
         conn.open();
 		// Request core list

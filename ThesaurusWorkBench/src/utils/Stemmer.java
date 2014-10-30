@@ -61,7 +61,14 @@ public class Stemmer {
 
 					}
 					
-					indexS=terms.substring(0,terms.length()-1);
+					try{
+						indexS=terms.substring(0,terms.length()-1);
+						}
+						catch(Exception exc)
+						{
+							indexS="-1";
+						}
+					
 				}	 									
 			}
 		}	 
