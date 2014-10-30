@@ -54,7 +54,6 @@ public class CtrlMain extends HttpServlet {
 		
 		if(!selectedValue.equals("default"))
         {
-			System.out.println(selectedValue);
 			
 			 //Definizione di un oggetto della classe ServletContext
 			   ServletContext oContesto = getServletContext();
@@ -97,11 +96,7 @@ public class CtrlMain extends HttpServlet {
 	}
 	
 	
-	
-	
-	
 	private void viewPage(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
-         
 		ArrayList<String> elenco_Thes=new ArrayList<>();
 		elenco_Thes=thesaurus.elenco();
 		request.setAttribute("elenco_Thes", elenco_Thes);

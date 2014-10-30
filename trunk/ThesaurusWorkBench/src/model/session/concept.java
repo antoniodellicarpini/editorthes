@@ -10,6 +10,7 @@ public class concept {
 	private conceptSet conceptSet ;
 	private String id;
 	private String descrittore;
+	private String concept;
 	private ArrayList<String> narrower;
 	private ArrayList<String> hierarchy;
 	private ArrayList<String> broader;
@@ -31,6 +32,12 @@ public class concept {
 
 	public void setDescrittore(String descrittore) {
 		this.descrittore = descrittore;
+	}
+	public String getConcept() {
+		return this.concept; 
+	}
+	public void setConcept(String concept) {
+		this.concept = concept;
 	}
 
 	public ArrayList<String> getNarrower() {
@@ -81,11 +88,22 @@ public class concept {
 		this.note = note;
 	}
 	
-	public concept(){}
-	
-	public concept(String concept)
+	public concept(){
+		init();
+	}
+	public concept(String concept,boolean broader)
 	{
-		this.conceptSet=new conceptSet(concept);
+		init(concept,broader);
+	}
+	
+	
+	public void init()
+	{
+		this.conceptSet=new conceptSet();
+	}
+	public void init(String concept, boolean broader)
+	{
+		this.conceptSet=new conceptSet(concept,broader);
 		this.setId(this.conceptSet.id);
 		this.setAltLabel(this.conceptSet.altLabel);
 		this.setBroader(this.conceptSet.broader);
@@ -94,10 +112,49 @@ public class concept {
 		this.setNarrower(this.conceptSet.narrower);
 		this.setNote(this.conceptSet.note);
 		this.setRelated(this.conceptSet.related);
+		this.setConcept(this.conceptSet.concept);
 	}
 
+	
 	public static ArrayList<String> TopTerm(String Thes) 
 	{
 		return model.entity.conceptSet.getTopTerm(Thes);
+	}
+	
+	public int insert()
+	{   if(this.getAltLabel()!=null)
+			this.conceptSet.altLabel=this.getAltLabel();
+		if(this.getBroader()!=null)
+			this.conceptSet.broader=this.getBroader();
+		this.conceptSet.descrittore=this.getDescrittore();
+		this.conceptSet.concept=this.getConcept();
+		this.conceptSet.hierarchy=this.getHierarchy();
+		if(this.getNarrower()!=null)
+			this.conceptSet.narrower=this.getNarrower();
+		if(this.getNote()!=null)
+			this.conceptSet.note=this.getNote();
+		if(this.getRelated()!=null)
+			this.conceptSet.related=this.getRelated();
+		
+		return this.conceptSet.insert();
+	
+	}
+	
+	public void delete()
+	{
+		this.conceptSet.delete();
+	}
+	public String edit(String exBroader, String exdescrittore)
+	{
+		this.conceptSet.concept=this.getConcept();
+		this.conceptSet.descrittore=this.getDescrittore();
+		this.conceptSet.broader=this.getBroader();
+		
+		return this.conceptSet.edit(exBroader, exdescrittore);
+		
+	}
+	
+	public static ArrayList<String> getSuggest(String q, String limit){
+		return model.entity.conceptSet.getSuggest(q, limit);
 	}
 }
