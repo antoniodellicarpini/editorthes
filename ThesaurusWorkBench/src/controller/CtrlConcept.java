@@ -53,25 +53,26 @@ public class CtrlConcept extends HttpServlet {
 		// TODO Auto-generated method stub
 		System.out.println("query: ");
 		String azione=request.getParameter("cmdAzione");
+		System.out.println("ctr:"+azione);
 		
 		if(request.getParameter("loadConcept")!=null)
 		{
 			showConcept(request,response);
 		}
 		
-		else if(azione.equals("create"))
+		else if(azione.equals("Create Concept"))
 		{
 		   createConcept(request,response);	
 		}
-		else if(azione.equals("delete"))
+		else if(azione.equals("Delete Concept"))
 		{
 			deleteConcept(request,response);
 		}
-		else if(azione.equals("edit"))
+		else if(azione.equals("edit Broader")||azione.equals("edit PrefLabel"))
 		{
 			editConcept(request,response);
 		}
-		else if(azione.equals("loadThes")){
+		else {
 			showTopTerm(request,response);
 			}
 	}
@@ -81,9 +82,8 @@ public class CtrlConcept extends HttpServlet {
 			   HttpServletResponse response) throws ServletException, IOException {
 			  // TODO Auto-generated method stub
 			  //Invocare il metodo elenco della classe docente
-		
 		      ArrayList<String> elenco=null;
-		      
+		      System.out.println(request.getAttribute("selectedValue"));
 		      if(request.getAttribute("selectedValue")==null)
 		      {
 		    	  elenco = concept.TopTerm((String)request.getSession().getAttribute("beanThes"));
@@ -97,6 +97,7 @@ public class CtrlConcept extends HttpServlet {
 		      
 			  //Condivisione Elenco de concept
 			  request.setAttribute("elencoConcept", elenco);
+			  System.out.println("Shoe"+elenco.size());
 			  //Visualizzare la pagina 
 			  ServletContext oContesto = getServletContext();
 			  RequestDispatcher oDispatcher = oContesto.getRequestDispatcher("/application/index.jsp");

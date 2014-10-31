@@ -35,10 +35,13 @@ public class CtrlMain extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-
 		//String selectedValue[]=request.getParameterValues("option");
 		//System.out.println(selectedValue[0]);
-		  viewPage(request, response);
+		if(request.getSession().getAttribute("beanThes")!=null)
+		{
+			request.getSession().removeAttribute("beanThes");
+		} 
+			viewPage(request, response);
 			
 		
 	}
@@ -50,48 +53,16 @@ public class CtrlMain extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		String selectedValue=request.getParameter("optionThes");
-		
-		if(!selectedValue.equals("default"))
+		String selectedValue=request.getParameter("cmdAzione");
+		if(selectedValue!=null)
         {
-			
 			 //Definizione di un oggetto della classe ServletContext
 			   ServletContext oContesto = getServletContext();
 			   //Definizione di un oggetto per la pubblicazione della JSP
 			   request.setAttribute("selectedValue",selectedValue);
 			   RequestDispatcher oDispatcher = oContesto.getRequestDispatcher("/CtrlConcept");
-			   oDispatcher.forward(request,response);
-           
+			   oDispatcher.forward(request,response);   
         }
-		
-		
-		// TODO Auto-generated method stub
-		/*String valoreScelto = request.getParameter("rdoScelta");
-		  if(valoreScelto!=null) {
-		   int scelta=Integer.parseInt(valoreScelto);
-		   String controller = null;
-		   switch(scelta) {
-		    case 0 : controller="/CtrlArchivioDocente";
-		      break;
-		    case 1 : controller="/CtrlArchivioStudente";
-		      break;
-		    case 2 : controller="";
-		      break;
-		    case 3 : controller="";
-		      break;
-		    case 4 : controller="";
-		      break;
-		    case 5 : controller="";
-		    break;
-		   }
-		   //Definizione di un oggetto della classe ServletContext
-		   ServletContext oContesto = getServletContext();
-		   //Definizione di un oggetto per la pubblicazione della JSP
-		   RequestDispatcher oDispatcher = oContesto.getRequestDispatcher(controller);
-		   oDispatcher.forward(request,response);
-		   }
-		  else visualizzaMenu(request,response);
-		*/
 		
 	}
 	
