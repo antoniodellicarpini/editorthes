@@ -386,9 +386,11 @@ public class conceptSet {
 		}
 		
 		this.descrittore=s.getIndexS();
+		if(this.broader!=null){
 		if(this.descrittore.equals(this.broader.get(0)))
 		{
 			return "-4";
+		}
 		}
 		// se ho cambiato il descrittore devo controllare che quello nuovo nn sia presente nell'indice
 		if(!this.concept.equals(exdescrittore))

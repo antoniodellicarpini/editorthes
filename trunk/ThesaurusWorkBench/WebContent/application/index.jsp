@@ -11,118 +11,102 @@
 	<meta name="keywords" content="The Perfect 2 Column Liquid Layout (left menu): No CSS hacks. SEO friendly. iPhone compatible." />
 	<meta name="robots" content="index, follow" />
 	<link rel="stylesheet" type="text/css" href="application/css/screen.css" media="screen" />
-	
-	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
-	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
-	<script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
-		<script>
-		$(function()
-			  {
-			    var submitActor = null;
-			    var $form = $( '#crudOperations' );
-			    var $submitActors = $form.find( 'input[type=submit]' );
-			    $form.submit( function( event )
-			    {
-			      if ( null === submitActor )
-			      {
-			        // If no actor is explicitly clicked, the browser will
-			        // automatically choose the first in source-order
-			        // so we do the same here
-			        submitActor = $submitActors[0];
-			      }
-					if(submitActor.value=="delete")
-					{
-						if( confirm("sei sicuro di voler eliminare il concept corrente?"))
-							{
-								return true;
-							}
-						else return false;
-						
-					}
-					if(submitActor.value=="create")
-					{
-						var person = prompt("Please enter description","Insert descr"); 
-					    if (person!= null) {
-					    	document.crudOperation.descrittoreHidden.value=person;
-					    	return true;	
-					    }
-					    else
-					    {
-					    	return false;
-					    }
-						
-					}
-
-			      return false;
-			    });
-
-			    $submitActors.click( function( event )
-			    {
-			      submitActor = this;
-			    });
-
-			  } );
-		
-		$(function()
-				  {
-				    var submitActor = null;
-				    var $form = $( '#editOperations' );
-				    var $submitActors = $form.find( 'input[type=submit]' );
-				    $form.submit( function( event )
-				    {
-				      if ( null === submitActor )
-				      {
-				        // If no actor is explicitly clicked, the browser will
-				        // automatically choose the first in source-order
-				        // so we do the same here
-				        submitActor = $submitActors[0];
-				      }
-						if(submitActor.value=="edit")
-						{
-							if( confirm("sei sicuro di voler modificare il concept corrente?"))
-								{
-									return true;
-								}
-							else return false;
-						}
-
-				      return false;
-				    });
-
-				    $submitActors.click( function( event )
-				    {
-				      submitActor = this;
-				    });
-
-				  } );
-	
-	</script>
+	<link rel="stylesheet" href="application/css/jquery-ui.css">
+	<script src="application/js/jquery-1.10.2.js"></script>
+	<script src="application/js/jquery-ui.js"></script>
+	<script src="application/js/script.js"></script>	
 </head>
 <body onload="errorFunction()">
+	<div id="dialog">
+	    <div class="content">
+		<% if ( request.getAttribute("elenco_Thes")!=null) 
+			{		ArrayList elencoThes= (ArrayList) request.getAttribute("elenco_Thes"); %>
+					
+		<%   		for (int i=0; i<elencoThes.size(); i++)
+		   			{  
+		   				%>
+		   			<div class="thes" onClick='selectThes("<%= elencoThes.get(i)%>");' ><div class="nameThes"><%= elencoThes.get(i)%></div></div>	
+		      		 <!--  <input type="submit" value="<%= elencoThes.get(i)%>" name="cmdAzione"  /> -->    
+		  <% }
+		}%>	
+	  </div>
+	</div>
+
 <div id="header">
+<div id="thesaurus" class="vocimenu">THESAURUS</div>
+<div id="import" class="vocimenu">IMPORT</div>
+<div id="export" class="vocimenu">EXPORT</div>
+</div>
+<div id=searchBar>
+<form method="post" name="searchOperation" id="searchOperations" action="/ThesaurusWorkBench/CtrlConcept" >
+        <div id="contentSearch">
+	 		<input type="text" id="search" name="loadConcept" value="search" />
+	 		
+	 		<input type ="submit" id="lens"  name="cmdAzione" value="" style="background:url('/ThesaurusWorkBench/application/image/search_lupe.png') no-repeat; padding: 0.5em 1em">	
+	 	</div>
+		</form>
+</div>
 
-<form method="post" action="/ThesaurusWorkBench/CtrlMain">
-	<select name="optionThes">	
-	<option value="default" selected=true> seleziona un thes </option>
-	<% if ( request.getAttribute("elenco_Thes")!=null) 
-		{		ArrayList elencoThes= (ArrayList) request.getAttribute("elenco_Thes"); %>
+<div id="contenitore">
+	<div id="contenitoreSinistro">
+
+		
+		<form method="post" action="/ThesaurusWorkBench/CtrlConcept">
+			<!-- Column 2 start -->
+			<% if(request.getAttribute("descrittore")!=null)
+					{ %>
 				
-	<%   		for (int i=0; i<elencoThes.size(); i++)
-	   			{  
-	   				%>
-	      		<option value="<%= elencoThes.get(i)%>"> <%=elencoThes.get(i) %> </option>    
-	  <% }
-	}%>
-	</select>
-	<input type ="submit" name="cmdAzione" value="loadThes">
-</form>
-
-<form method="post" name="crudOperation" id="crudOperations" action="/ThesaurusWorkBench/CtrlConcept" >
-	<ul>
-		<li><a href="#"><span><input type ="submit"  name="cmdAzione" value="create"></span></a></li>
-		<li><a href="#"><span><input type ="submit"  name="cmdAzione" value="delete"></span></a></li>
-	</ul>
-		<input type="text" id="search" name="loadConcept"/><input type ="submit"  name="cmdAzione" value="showConcept">	
+				<div id="conceptB" class="concept"><%= request.getAttribute("concept")%></div>
+				<br/>
+				
+				<%	}
+				 %>
+			<% if( request.getAttribute("elencoConcept")!=null) 
+				{
+				 ArrayList elencoConcept= (ArrayList) request.getAttribute("elencoConcept");
+				 
+				 for (int i=0; i<elencoConcept.size(); i++)
+				   {  	 
+				 %>
+				 
+        <input type ="submit" class="concept" name="loadConcept" value="<%= elencoConcept.get(i)%>"/> 
+		<br/> 
+				 <%
+					} 
+				 }%>
+			
+			</form>
+		   
+			<!-- Column 2 end -->
+		</div>
+		<div id="contenitoreDestro">
+		<form method="post" name="crudOperation" id="crudOperations" action="/ThesaurusWorkBench/CtrlConcept" >
+			<% if(request.getSession().getAttribute("beanThes")==null)
+			 { %><div id="headerDescription"> Seleziona un Thesaurus			                                 
+					                            </div>
+				<%}	
+				                          
+			 else{ %> 
+		
+		     <div id=headContenitoreDestro>
+		     	<div id="headerDescription"><% if(request.getAttribute("descrittore")!=null)
+					                            { %>  
+					                            <%=	request.getAttribute("descrittore") %>
+					                            <%} else{ %>
+					                                 <%=	request.getSession().getAttribute("beanThes") %>
+					                                <%}%>
+					                                 
+					                            
+				</div>
+		     	<div id="cmdCreaDelete"> 
+		     	
+		     			<input type ="submit" class="buttonCD"  id="create" name="cmdAzione" value="Create Concept">
+	                                <input type ="submit" class="buttonCD" id="delete"   name="cmdAzione" value="Delete Concept">
+	            </div>
+		     </div>
+			
+	
+	
 	 <% if(request.getAttribute("descrittore")!=null)
 					{
 					for (int j=0; j<((ArrayList)request.getAttribute("hierarchy")).size(); j++)
@@ -135,87 +119,71 @@
 							<%
 					
 					}%>
-	<input type="hidden" value="" name="descrittoreHidden">
-</form>
-
-<div class="colmask leftmenu">
-	<div class="colleft">
-		<div class="col1">
-			<!-- Column 1 start -->
+			<input type="hidden" value="" name="descrittoreHidden">
+		</form>
+		
 			<form method="post" name="editOperation" id="editOperations" action="/ThesaurusWorkBench/CtrlConcept" >
 			<p> <% if(request.getAttribute("descrittore")!=null)
 					{
 				 %>
-				   <p>concept description for <%=request.getAttribute("concept")%> </p>
 				   <input type="hidden" name="descrittoreHidden" value="<%=request.getAttribute("descrittore")%>"/>
-				   <p>Display name</p>
-				   <input type="text" name="displayName" value="<%=request.getAttribute("concept")%>"/>
+				   
+				   <div id="prefLabel" class="element">
+							<div class="list_element">
+								<h1>Preferred Label</h1>
+									<div id="nomePrefLabel" class="element_of_predicate"><%=request.getAttribute("concept")%></div>
+							</div>
+							<div class="edit">	
+										<input type="hidden" value="<%=request.getAttribute("concept")%>" name="displayName"/>
+										<input type ="submit"  name="cmdAzione" id="open" class="buttonEdit" value="edit PrefLabel"/>
+						    </div>
+				    </div>
+				    
+				    <div id="broader" class="element">
+							<div class="list_element">
+								<h1>Broader Concept</h1>
+									
+			<div id="nomeBroader" class="element_of_predicate">
+	<% if(request.getAttribute("broader")!=null) 
+								{%>
+										    <%=request.getAttribute("broader")%>
+										    <input type="hidden" value="<%=request.getAttribute("broader")%>" name="displayBroader"/>
+										    
+										<%} 
+									 else{%>
+									       top concept
+									       <input type="hidden" value="" name="displayBroader"/>
+									     <%}%>
+									</div>
+									
+									<div class="edit">
+										<input type ="submit"  name="cmdAzione" id="open" class="buttonEdit" value="edit Broader"/>
+									</div>
+									
+							</div>
+				    </div>
+				   
+				   
+				
 				   <p>Hierarchy:</p>
 				 <% 
 					for (int j=0; j<((ArrayList)request.getAttribute("hierarchy")).size(); j++)
 	   					{	
-				%>        
+				 %>        
 						<p name="hierarchy"> <%=((ArrayList)request.getAttribute("hierarchy")).get(j)%> </p>
 				
-					<% }%>
-					<p>Broader:</p>
-					<%
-					
-					if(request.getAttribute("broader")!=null){
-						for (int j=0; j<((ArrayList)request.getAttribute("broader")).size(); j++)
-   						{
-							%> 
-							<input type="text" name="displayBroader" value="<%=((ArrayList)request.getAttribute("broader")).get(j)%>"/>      
-							<%
-   						}
-						
-					}
-					else
-					{
-						%> 
-						<input type="text" name="displayBroader" value=""/>      
-						<%
-						
-					}
-					
-					
+					<% }
 				 
 					}
-			else
-			{
-			%> Selezionare un descrittore
-				<%
-				}		%>
-					</p>
-					<input type ="submit"  name="cmdAzione" id="open" value="edit">
+				%>
+				
 			</form>
 				<!-- Column 1 end -->
+		<%}%> <!-- chisusa else -->
 		</div>
-		<div class="col2">
-		
-		<form method="post" action="/ThesaurusWorkBench/CtrlConcept">
-			<!-- Column 2 start -->
-			
-			<% if( request.getAttribute("elencoConcept")!=null) 
-				{
-				 ArrayList elencoConcept= (ArrayList) request.getAttribute("elencoConcept");
-				 
-				 for (int i=0; i<elencoConcept.size(); i++)
-				   {  
-				 %>
-				 
-		<input type ="submit" name="loadConcept" value="<%= elencoConcept.get(i)%>"> 
-		<br/> 
-				 <%
-					} 
-				 }%>
-			
-			</form>
-		   
-			<!-- Column 2 end -->
 		</div>
-	</div>
-</div>
+	
+
 <div id="footer">
 	<p>copyright</p>
 </div>
@@ -254,24 +222,6 @@ function errorFunction() {
     
 }
 </script>
-	<script type="text/javascript">
-	$(function() {
-        $("#search").autocomplete({     
-        source : function(request, response) {
-        $.ajax({
-                url : "/ThesaurusWorkBench/CtrlConcept",
-                type : "GET",
-                data : {
-                        term : request.term
-                },
-                dataType : "json",
-                success : function(data) {
-                        response(data);
-                }
-        });
-}
-        });
-	});
-	</script>
+
 </body>
 </html>
