@@ -15,4 +15,8 @@ public class thesaurus {
 		return thesaurusSet.elencoThes();
 	}
 
+	public static void setThes(String thes) 
+	{
+		thesaurusSet.setThes(thes);
+	}
 }

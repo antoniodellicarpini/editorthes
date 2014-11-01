@@ -35,8 +35,7 @@ public class CtrlMain extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		//String selectedValue[]=request.getParameterValues("option");
-		//System.out.println(selectedValue[0]);
+
 		if(request.getSession().getAttribute("beanThes")!=null)
 		{
 			request.getSession().removeAttribute("beanThes");
@@ -56,12 +55,12 @@ public class CtrlMain extends HttpServlet {
 		String selectedValue=request.getParameter("cmdAzione");
 		if(selectedValue!=null)
         {
-			 //Definizione di un oggetto della classe ServletContext
+			   //Definizione di un oggetto della classe ServletContext
 			   ServletContext oContesto = getServletContext();
 			   //Definizione di un oggetto per la pubblicazione della JSP
 			   request.setAttribute("selectedValue",selectedValue);
 			   RequestDispatcher oDispatcher = oContesto.getRequestDispatcher("/CtrlConcept");
-			   oDispatcher.forward(request,response);   
+			   oDispatcher.forward(request,response);
         }
 		
 	}
