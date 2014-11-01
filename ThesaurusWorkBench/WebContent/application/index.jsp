@@ -5,7 +5,7 @@
 <html>
 
 <head>
-	<title>The Perfect 2 Column Liquid Layout (left menu): No CSS hacks. SEO friendly. iPhone compatible.</title>
+	<title>Thesaurus Workbench</title>
 	<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
 	<meta name="description" content="The Perfect 2 Column Liquid Layout (left menu): No CSS hacks. SEO friendly. iPhone compatible." />
 	<meta name="keywords" content="The Perfect 2 Column Liquid Layout (left menu): No CSS hacks. SEO friendly. iPhone compatible." />
@@ -91,7 +91,7 @@
 		     <div id=headContenitoreDestro>
 		     	<div id="headerDescription"><% if(request.getAttribute("descrittore")!=null)
 					                            { %>  
-					                            <%=	request.getAttribute("descrittore") %>
+					                            <%=	request.getAttribute("concept") %>
 					                            <%} else{ %>
 					                                 <%=	request.getSession().getAttribute("beanThes") %>
 					                                <%}%>
@@ -146,12 +146,12 @@
 			<div id="nomeBroader" class="element_of_predicate">
 	<% if(request.getAttribute("broader")!=null) 
 								{%>
-										    <%=request.getAttribute("broader")%>
-										    <input type="hidden" value="<%=request.getAttribute("broader")%>" name="displayBroader"/>
+										    <%=((ArrayList)request.getAttribute("broader")).get(0)%>
+										    <input type="hidden" value="<%=((ArrayList)request.getAttribute("broader")).get(0)%>" name="displayBroader"/>
 										    
 										<%} 
 									 else{%>
-									       top concept
+									       Top Concept
 									       <input type="hidden" value="" name="displayBroader"/>
 									     <%}%>
 									</div>
@@ -178,14 +178,14 @@
 				%>
 				
 			</form>
-				<!-- Column 1 end -->
+				
 		<%}%> <!-- chisusa else -->
 		</div>
 		</div>
 	
 
 <div id="footer">
-	<p>copyright</p>
+	
 </div>
 
 <script>

@@ -312,7 +312,34 @@ public class conceptSet {
 		{
 			conceptSet father=new conceptSet(this.broader.get(0),true);
 			
-			father.narrower=this.narrower;
+			if(father.narrower.size()==1)
+			{
+				//il padre ha solo un narrower che è l'elemento da eliminare
+				//effettuo direttamente l'assegnazione dei nuovi narrower (oppure è null se non ce ne sono)
+				father.narrower=this.narrower;
+			}
+			else
+			{
+				//il padre ha piu di un narrower
+				//cerco il narrower da eliminare
+				for(int i=0;i<father.narrower.size();i++)
+				{
+					if(father.narrower.get(i).equals(this.concept))
+					{
+						father.narrower.remove(i);
+					}
+				}
+				
+				//aggiungo i nuovi narrower (se ce ne sono)
+				if(this.narrower!=null)
+				{
+					for(int i=0;i<this.narrower.size();i++)
+					{
+						father.narrower.add(this.narrower.get(i));
+					}
+				}
+			}
+			
 			update(father);
 		}
 		try {
@@ -452,8 +479,6 @@ public class conceptSet {
 				update(father);
 			}
 		
-		System.out.println(exBroader);
-		
 		// rimuoviamo o modifichiamo all'ex padre il narrower
 		if(exBroader!=null)
 		{
@@ -558,9 +583,6 @@ public class conceptSet {
 		query.set("qt", "/terms");
 		query.set("terms.fl", "concept");
 		query.set("terms.prefix", q);
-	    //query.setParam(TermsParams.TERMS_FIELD, "concept");
-	    //query.setParam(TermsParams.TERMS_PREFIX_STR, q);
-	    System.out.println(query.toString());
 	    QueryResponse response = null;
 	    try {
 	     response = connection.getInstance().server.query(query);
@@ -570,7 +592,6 @@ public class conceptSet {
 	     e.printStackTrace();
 	    }
 	    TermsResponse tr = response.getTermsResponse();
-	    System.out.println(tr.getTerms("concept").size());
 	    List<Term> termList = tr.getTerms("concept");
 	    
 	    ArrayList<String> a = new ArrayList<>(); 
@@ -578,7 +599,6 @@ public class conceptSet {
 	    for(Term t : termList)
 	    {
 	    	a.add(t.getTerm());
-	    	System.out.println(t.getTerm());
 	    }
 	    
 	    return a;

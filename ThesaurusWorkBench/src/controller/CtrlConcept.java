@@ -51,9 +51,7 @@ public class CtrlConcept extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		System.out.println("query: ");
 		String azione=request.getParameter("cmdAzione");
-		System.out.println("ctr:"+azione);
 		
 		if(request.getParameter("loadConcept")!=null)
 		{
