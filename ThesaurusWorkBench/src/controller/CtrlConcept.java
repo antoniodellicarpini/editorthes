@@ -15,6 +15,8 @@ import javax.servlet.http.HttpSession;
 
 import utils.Stemmer;
 import model.session.concept;
+import model.session.thesaurus;
+
 import com.google.gson.*;
 /**
  * Servlet implementation class CtrlConcept
@@ -79,9 +81,9 @@ public class CtrlConcept extends HttpServlet {
 	private void showTopTerm(HttpServletRequest request,
 			   HttpServletResponse response) throws ServletException, IOException {
 			  // TODO Auto-generated method stub
-			  //Invocare il metodo elenco della classe docente
+		
 		      ArrayList<String> elenco=null;
-		      System.out.println(request.getAttribute("selectedValue"));
+		      
 		      if(request.getAttribute("selectedValue")==null)
 		      {
 		    	  elenco = concept.TopTerm((String)request.getSession().getAttribute("beanThes"));
@@ -92,10 +94,11 @@ public class CtrlConcept extends HttpServlet {
 		    	  HttpSession oSessione=request.getSession();
 				  oSessione.setAttribute("beanThes",request.getAttribute("selectedValue"));
 		         }
-		      
+		        ArrayList<String> elenco_Thes=new ArrayList<>();
+				elenco_Thes=thesaurus.elenco();
+				request.setAttribute("elenco_Thes", elenco_Thes);
 			  //Condivisione Elenco de concept
 			  request.setAttribute("elencoConcept", elenco);
-			  System.out.println("Shoe"+elenco.size());
 			  //Visualizzare la pagina 
 			  ServletContext oContesto = getServletContext();
 			  RequestDispatcher oDispatcher = oContesto.getRequestDispatcher("/application/index.jsp");
@@ -106,8 +109,9 @@ public class CtrlConcept extends HttpServlet {
 	private void showConcept(HttpServletRequest request,
 			   HttpServletResponse response) throws ServletException, IOException {
 			  // TODO Auto-generated method stub
-			  //Invocare il metodo elenco della classe docente
 			
+				thesaurus.setThes((String)request.getSession().getAttribute("beanThes"));
+		
 		       concept c=null;
 				if(request.getParameter("loadConcept")==null)
 				{
@@ -129,6 +133,11 @@ public class CtrlConcept extends HttpServlet {
 			  request.setAttribute("concept", c.getConcept());
 			  request.setAttribute("note", c.getNote());
 			  request.setAttribute("related", c.getRelated());
+			  
+			  ArrayList<String> elenco_Thes=new ArrayList<>();
+			  elenco_Thes=thesaurus.elenco();
+			  request.setAttribute("elenco_Thes", elenco_Thes);
+				
 			  ServletContext oContesto = getServletContext();
 			//Visualizzare la pagina 
 			  RequestDispatcher oDispatcher = oContesto.getRequestDispatcher("/application/index.jsp");
@@ -137,6 +146,7 @@ public class CtrlConcept extends HttpServlet {
 	
 	private void createConcept(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
 	{	    
+		thesaurus.setThes((String)request.getSession().getAttribute("beanThes"));
 		
 		concept c=new concept();
 		c.setDescrittore(request.getParameter("descrittoreHidden"));
@@ -180,7 +190,8 @@ public class CtrlConcept extends HttpServlet {
 	
 	private void deleteConcept(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException 
 	    {
-		 
+		  thesaurus.setThes((String)request.getSession().getAttribute("beanThes"));
+		  
 		  concept c=new concept(request.getParameter("descrittore"), true);
 		  c.delete();
 		  if(c.getBroader()!=null)
@@ -193,8 +204,11 @@ public class CtrlConcept extends HttpServlet {
 			  this.showTopTerm(request, response);
 		  }
 		}
+	
 	private void editConcept(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException 
     {
+		thesaurus.setThes((String)request.getSession().getAttribute("beanThes"));
+		
 		concept c=new concept(request.getParameter("descrittoreHidden"), true);
 		ArrayList<String> broader=new ArrayList<>();
 		

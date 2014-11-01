@@ -44,4 +44,11 @@ public class thesaurusSet {
 		
 		return coreList;
 	}
+	
+	
+	public static void setThes(String thes)
+	{
+		connection conn= connection.getInstance();
+        conn.open(thes);
+	}
 }

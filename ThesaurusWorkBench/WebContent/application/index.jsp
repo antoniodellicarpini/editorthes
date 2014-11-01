@@ -26,7 +26,7 @@
 		   			{  
 		   				%>
 		   			<div class="thes" onClick='selectThes("<%= elencoThes.get(i)%>");' ><div class="nameThes"><%= elencoThes.get(i)%></div></div>	
-		      		 <!--  <input type="submit" value="<%= elencoThes.get(i)%>" name="cmdAzione"  /> -->    
+		      		
 		  <% }
 		}%>	
 	  </div>
