@@ -154,6 +154,13 @@ public class concept {
 		
 	}
 	
+	public void editAltLabel()
+	{
+		this.conceptSet.altLabel=this.altLabel;
+		this.conceptSet.editAltLabel();
+	}
+	
+	
 	public static ArrayList<String> getSuggest(String q, String limit){
 		return model.entity.conceptSet.getSuggest(q, limit);
 	}
