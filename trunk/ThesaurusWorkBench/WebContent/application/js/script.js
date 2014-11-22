@@ -16,8 +16,35 @@ $(function () {
 		    });
 
 		    $("#thesaurus").click(function () {
+		    	
+		    	
+		    	$.ajax({
+	                url : "/ThesaurusWorkBench/CtrlMain",
+	                type : "POST",
+	                data : {
+	                        term : "parametro"
+	                },
+	                
+	                success : function(data) {
+	                	
+	                	jsonData = JSON.parse(data);
+	            
+	                	for (var i = 0; i < jsonData.length; i++) {
+	                		
+	                	    $("#thesauri").append('<div class="thes" onClick=selectThes("'+jsonData[i]+'")> <div class="nameThes">'+jsonData[i]+'</div></div>');
+	                	}
+	                	
+	                	
+	                	
+	                	
+	                        
+	                }
+		    	});
+		    	
+		    	
 		        $("#dialog").dialog('open');
 		    });
+		    
 		    
 		    $("#dialogBroader").dialog({
 		        autoOpen: false,
@@ -38,6 +65,50 @@ $(function () {
 		    $("#openBroader").click(function () {
 		        $("#dialogBroader").dialog('open');
 		    });
+		    
+		    
+		    
+		    $("#dialogAltLabel").dialog({
+		        autoOpen: false,
+		         modal: true,
+		        height: 500,
+		        width: 500,
+		        show: {
+		            
+		            duration: 400,
+		        },
+		        
+		       
+		        open: function (event, ui) {
+		            $('#content');
+		        }
+		    });
+
+		    $("#openAltLabel").click(function () {
+		        $("#dialogAltLabel").dialog('open');
+		    });
+		    
+		    
+		    $("#dialogImport").dialog({
+		        autoOpen: false,
+		         modal: true,
+		        height: 500,
+		        width: 500,
+		        show: {
+		            
+		            duration: 400,
+		        },
+		        
+		       
+		        open: function (event, ui) {
+		            $('#content');
+		        }
+		    });
+
+		    $("#import").click(function () {
+		        $("#dialogImport").dialog('open');
+		    });
+		    
 		});
 	
 	//la seguente funzione è per la form name=CRUDOperation	
@@ -113,7 +184,7 @@ $(function () {
         source : function(request, response) {
         $.ajax({
                 url : "/ThesaurusWorkBench/CtrlConcept",
-                type : "GET",
+                type : "POST",
                 data : {
                         term : request.term
                 },
@@ -122,7 +193,21 @@ $(function () {
                         response(data);
                 }
         });
-}
+		},
+		select: function(event, ui) {
+		   
+		    document.getElementById("searchOperations").submit();
+		    var originalEvent = event;
+	        while (originalEvent) {
+	            if (originalEvent.keyCode == 13)
+	                originalEvent.stopPropagation();
+
+	            if (originalEvent == event.originalEvent)
+	                break;
+
+	            originalEvent = event.originalEvent;
+	        }
+		}
         });
 	});
 	
@@ -132,7 +217,7 @@ $(function () {
         source : function(request, response) {
         $.ajax({
                 url : "/ThesaurusWorkBench/CtrlConcept",
-                type : "GET",
+                type : "POST",
                 data : {
                         term : request.term
                 },
@@ -141,7 +226,21 @@ $(function () {
                         response(data);
                 }
         });
-}
+		},
+		select: function(event, ui) {
+		   
+		    document.getElementById("submitBroader").click();
+		    var originalEvent = event;
+	        while (originalEvent) {
+	            if (originalEvent.keyCode == 13)
+	                originalEvent.stopPropagation();
+
+	            if (originalEvent == event.originalEvent)
+	                break;
+
+	            originalEvent = event.originalEvent;
+	        }
+		}
         });
 	});
 	
@@ -203,7 +302,7 @@ $(function () {
 		
 		
 		function selectThes(str) {
-			
+		
 			method = "post"; // Set method to post by default if not specified.
 		    // The rest of this code assumes you are not using a library.
 		    // It can be made less wordy if you use one.
@@ -220,4 +319,40 @@ $(function () {
 		    document.body.appendChild(form);
 		    form.submit();
 		}
+		
+		
+		$(document).ready(function() {
+		    var max_fields      = 10; //maximum input boxes allowed
+		    var wrapper         = $(".input_fields_wrap"); //Fields wrapper
+		    var add_button      = $(".add_field_button"); //Add button ID
+		    
+		    var x = 1; //initlal text box count
+		    $(add_button).click(function(e){ //on add input button click
+		        e.preventDefault();
+		        if(x < max_fields){ //max input box allowed
+		            x++; //text box increment
+		            $(wrapper).append('<div><input type="text" name="altlabels"/><a href="#" class="remove_field">Remove</a></div>'); //add input box
+		        }
+		    });
+		    
+		    $(wrapper).on("click",".remove_field", function(e){ //user click on remove text
+		        e.preventDefault(); $(this).parent('div').remove(); x--;
+		    });
+		});
+		
+		
+		
+		
+		
+		$(document).on("keypress", 'form', function (e) {
+		    var code = e.keyCode || e.which;
+		    console.log(code);
+		    if (code == 13) {
+		        console.log('Inside');
+		        e.preventDefault();
+		        return false;
+		    }
+		});
+		
+		
 		

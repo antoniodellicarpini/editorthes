@@ -17,28 +17,57 @@
 	<script src="application/js/script.js"></script>	
 </head>
 <body onload="errorFunction()">
+
 	<div id="dialog">
-	    <div class="content">
-		<% if ( request.getAttribute("elenco_Thes")!=null) 
-			{		ArrayList elencoThes= (ArrayList) request.getAttribute("elenco_Thes"); %>
-					
-		<%   		for (int i=0; i<elencoThes.size(); i++)
-		   			{  
-		   				%>
-		   			<div class="thes" onClick='selectThes("<%= elencoThes.get(i)%>");' ><div class="nameThes"><%= elencoThes.get(i)%></div></div>	
-		      		
-		  <% }
-		}%>	
+	    <div id="thesauri" class="content">
+		
 	  </div>
 	</div>
+	
+	
+	<div id="dialogImport">
+		<h3>File Upload:</h3>
+		Select a file to upload: <br />
+		<form action="/ThesaurusWorkBench/CtrlImport" method="post" enctype="multipart/form-data">
+			<input type="file" name="file" size="50" />
+			<br />
+			<input type="submit" value="Upload File" />
+		</form>
+	</div>
+
 
 	<div id="dialogBroader">
 	<form method="post" name="editBroader" id="editBroader" action="/ThesaurusWorkBench/CtrlConcept" >
 	    <div class="content">
 			<input type="text" id="inputBroader" name="displayBroader" value="" />	
-			<input type ="submit" name="cmdAzione"  value="edit Broader"/>
+			<input type ="submit" id="submitBroader" name="cmdAzione"  value="edit Broader"/>
 			<input type="hidden" name="descrittoreHidden" value="<%=request.getAttribute("descrittore")%>"/>
 			<input type="hidden" value="<%=request.getAttribute("concept")%>" name="displayName"/>
+	  </div>
+	 </form>
+	</div>
+	
+	<div id="dialogAltLabel">
+	<form method="post" name="editBroader" id="editBroader" action="/ThesaurusWorkBench/CtrlConcept" >
+	    <div class="content">
+	    
+	    <% if(request.getAttribute("altLabel")!=null) 
+			{	
+				ArrayList<String> sinonimi = ((ArrayList)request.getAttribute("altLabel"));
+				for(int i=0; i<sinonimi.size(); i++)
+				{%>
+					<input type="text" name="altlabels" value="<%= sinonimi.get(i) %>">
+				<%}
+									
+			} %>
+				
+				<div class="input_fields_wrap">
+    				<button class="add_field_button">Add More Fields</button>
+    			<div><input type="text" name="altlabels"></div>
+				</div>
+				
+			<input type ="submit" name="cmdAzione"  value="edit AltLabel"/>
+			<input type="hidden" name="descrittoreHidden" value="<%=request.getAttribute("descrittore")%>"/>
 	  </div>
 	 </form>
 	</div>
@@ -52,9 +81,7 @@
 <div id=searchBar>
 <form method="post" name="searchOperation" id="searchOperations" action="/ThesaurusWorkBench/CtrlConcept" >
         <div id="contentSearch">
-	 		<input type="text" id="search" name="loadConcept" value="search" />
-	 		
-	 		<input type ="submit" id="lens"  name="cmdAzione" value="" style="background:url('/ThesaurusWorkBench/application/image/search_lupe.png') no-repeat; padding: 0.5em 1em">	
+	 		<input type="text" id="search" name="loadConcept" value="search" />	
 	 	</div>
 		</form>
 </div>
@@ -92,15 +119,38 @@
 			<!-- Column 2 end -->
 		</div>
 		<div id="contenitoreDestro">
-		<form method="post" name="crudOperation" id="crudOperations" action="/ThesaurusWorkBench/CtrlConcept" >
-			<% if(request.getSession().getAttribute("beanThes")==null)
+		
+		<form method="post" action="/ThesaurusWorkBench/CtrlConcept">
+		
+		<% if(request.getSession().getAttribute("beanThes")==null)
 			 { %><div id="headerDescription"> Seleziona un Thesaurus			                                 
 					                            </div>
-				<%}	
+			<%}	
 				                          
-			 else{ %> 
+		else{ %> 
+				
+			<%
+			if(request.getAttribute("descrittore")!=null)
+			{
+				String[] s= ((String)(((ArrayList)request.getAttribute("hierarchy"))).get(0)).split("/");
+				%>
+				<input type ="submit" class="concept" name="loadConcept" value="Root"/> 
+				<%
+				for(int i=0;i<s.length;i++)
+				{%>
+					<input type ="submit" class="concept" name="loadConcept" value="<%= s[i]%>"/> 
+				<%}
+			}%>
+			</form>
+			
+			
+		<form method="post" name="crudOperation" id="crudOperations" action="/ThesaurusWorkBench/CtrlConcept" >
+
 		
 		     <div id=headContenitoreDestro>
+		     
+		     
+		     
 		     	<div id="headerDescription"><% if(request.getAttribute("descrittore")!=null)
 					                            { %>  
 					                            <%=	request.getAttribute("concept") %>
@@ -156,7 +206,7 @@
 								<h1>Broader Concept</h1>
 									
 			<div id="nomeBroader" class="element_of_predicate">
-	<% if(request.getAttribute("broader")!=null) 
+							<% if(request.getAttribute("broader")!=null) 
 								{	
 									String[] gerarchia = ((String)((ArrayList)request.getAttribute("hierarchy")).get(0)).split("/");
 									String broader = gerarchia[gerarchia.length-2];
@@ -179,24 +229,49 @@
 									
 							</div>
 				    </div>
+				    
+				    
+			<div id="altlabel" class="element">
+							<div class="list_element">
+								<h1>Alternative Labels</h1>
+									
+			<div id="sinonimi" class="element_of_predicate">
+							<% if(request.getAttribute("altLabel")!=null) 
+								{	
+									ArrayList<String> sinonimi = ((ArrayList)request.getAttribute("altLabel"));
+									for(int i=0; i<sinonimi.size(); i++)
+									{%>
+										<p><%= sinonimi.get(i) %></p>
+									<%}
+									
+									    
+								} 
+								else{%>
+									       
+									       
+									     <%}%>
+									</div>
+									
+									<div class="edit">
+										<input type ="submit"  name="cmdAzione" id="openAltLabel" class="buttonEdit" value="edit AltLabel"/>
+									
+									</div>
+									
+							</div>
+				    </div>
 				   
 				   
 				
-				   <p>Hierarchy:</p>
-				 <% 
-					for (int j=0; j<((ArrayList)request.getAttribute("hierarchy")).size(); j++)
-	   					{	
-				 %>        
-						<p name="hierarchy"> <%=((ArrayList)request.getAttribute("hierarchy")).get(j)%> </p>
-				
-					<% }
 				 
-					}
+				<%}
 				%>
 				
 			</form>
-				
+			
 		<%}%> <!-- chisusa else -->
+		
+		
+		
 		</div>
 		</div>
 	
