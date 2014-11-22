@@ -32,6 +32,18 @@
 	  </div>
 	</div>
 
+	<div id="dialogBroader">
+	<form method="post" name="editBroader" id="editBroader" action="/ThesaurusWorkBench/CtrlConcept" >
+	    <div class="content">
+			<input type="text" id="inputBroader" name="displayBroader" value="" />	
+			<input type ="submit" name="cmdAzione"  value="edit Broader"/>
+			<input type="hidden" name="descrittoreHidden" value="<%=request.getAttribute("descrittore")%>"/>
+			<input type="hidden" value="<%=request.getAttribute("concept")%>" name="displayName"/>
+	  </div>
+	 </form>
+	</div>
+
+
 <div id="header">
 <div id="thesaurus" class="vocimenu">THESAURUS</div>
 <div id="import" class="vocimenu">IMPORT</div>
@@ -145,9 +157,13 @@
 									
 			<div id="nomeBroader" class="element_of_predicate">
 	<% if(request.getAttribute("broader")!=null) 
-								{%>
-										    <%=((ArrayList)request.getAttribute("broader")).get(0)%>
-										    <input type="hidden" value="<%=((ArrayList)request.getAttribute("broader")).get(0)%>" name="displayBroader"/>
+								{	
+									String[] gerarchia = ((String)((ArrayList)request.getAttribute("hierarchy")).get(0)).split("/");
+									String broader = gerarchia[gerarchia.length-2];
+									
+								%>
+									<h5><%=broader%></h5>	    
+									<input type="hidden" value="<%=broader%>" name="displayBroader"/>
 										    
 										<%} 
 									 else{%>
@@ -157,7 +173,8 @@
 									</div>
 									
 									<div class="edit">
-										<input type ="submit"  name="cmdAzione" id="open" class="buttonEdit" value="edit Broader"/>
+										<input type ="submit"  name="cmdAzione" id="openBroader" class="buttonEdit" value="edit Broader"/>
+									
 									</div>
 									
 							</div>

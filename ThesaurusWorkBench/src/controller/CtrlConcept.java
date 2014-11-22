@@ -38,13 +38,16 @@ public class CtrlConcept extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		System.out.println("chiamo controller");
+		thesaurus.setThes((String)request.getSession().getAttribute("beanThes"));
 		response.setContentType("application/json");
-
+		
 		String q = request.getParameter("term");
 		
 		PrintWriter writer = response.getWriter();
 		ArrayList<String> a = model.session.concept.getSuggest(q, "5");
 		String s=new Gson().toJson(a);
+		
 		writer.write(s);
 	}
 
@@ -59,7 +62,6 @@ public class CtrlConcept extends HttpServlet {
 		{
 			showConcept(request,response);
 		}
-		
 		else if(azione.equals("Create Concept"))
 		{
 		   createConcept(request,response);	

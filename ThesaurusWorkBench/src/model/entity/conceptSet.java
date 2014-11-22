@@ -445,7 +445,7 @@ public class conceptSet {
 		// modifico la gerarchia se è cambiato il broader
 		if(this.broader!=null)
 			{
-				conceptSet father=new conceptSet(this.broader.get(0),true);
+				conceptSet father=new conceptSet(this.broader.get(0),false);
 				ArrayList<String> h=new ArrayList<>();
 				h.add(father.hierarchy.get(0)+"/"+this.concept);
 				this.hierarchy=h;
@@ -593,9 +593,8 @@ public class conceptSet {
 	    }
 	    TermsResponse tr = response.getTermsResponse();
 	    List<Term> termList = tr.getTerms("concept");
-	    
+	   
 	    ArrayList<String> a = new ArrayList<>(); 
-	    
 	    for(Term t : termList)
 	    {
 	    	a.add(t.getTerm());

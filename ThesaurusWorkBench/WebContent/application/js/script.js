@@ -18,6 +18,26 @@ $(function () {
 		    $("#thesaurus").click(function () {
 		        $("#dialog").dialog('open');
 		    });
+		    
+		    $("#dialogBroader").dialog({
+		        autoOpen: false,
+		         modal: true,
+		        height: 500,
+		        width: 500,
+		        show: {
+		            
+		            duration: 400,
+		        },
+		        
+		       
+		        open: function (event, ui) {
+		            $('#content');
+		        }
+		    });
+
+		    $("#openBroader").click(function () {
+		        $("#dialogBroader").dialog('open');
+		    });
 		});
 	
 	//la seguente funzione è per la form name=CRUDOperation	
@@ -106,6 +126,25 @@ $(function () {
         });
 	});
 	
+	
+	$(function() {
+        $("#inputBroader").autocomplete({     
+        source : function(request, response) {
+        $.ajax({
+                url : "/ThesaurusWorkBench/CtrlConcept",
+                type : "GET",
+                data : {
+                        term : request.term
+                },
+                dataType : "json",
+                success : function(data) {
+                        response(data);
+                }
+        });
+}
+        });
+	});
+	
 	//funzoione per la form di editOperation
 		$(function()
 				  {
@@ -136,20 +175,7 @@ $(function () {
 						    }
 		
 						}
-						if(submitActor.value=="edit Broader")
-						{
 						
-							var person = prompt("Please enter description",document.editOperation.displayBroader.value); 
-						    if (person!= null) {
-						    	document.editOperation.displayBroader.value=person;
-						    	return true;	
-						    }
-						    else
-						    {
-						    	return false;
-						    }
-							
-						}
 				      
 				      
 				      
@@ -194,9 +220,4 @@ $(function () {
 		    document.body.appendChild(form);
 		    form.submit();
 		}
-		
-		
-		
-
-
 		
