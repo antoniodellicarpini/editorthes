@@ -3,6 +3,7 @@ package controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -38,17 +39,6 @@ public class CtrlConcept extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		System.out.println("chiamo controller");
-		thesaurus.setThes((String)request.getSession().getAttribute("beanThes"));
-		response.setContentType("application/json");
-		
-		String q = request.getParameter("term");
-		
-		PrintWriter writer = response.getWriter();
-		ArrayList<String> a = model.session.concept.getSuggest(q, "5");
-		String s=new Gson().toJson(a);
-		
-		writer.write(s);
 	}
 
 	/**
@@ -56,6 +46,12 @@ public class CtrlConcept extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		if(request.getParameter("term")!=null)
+		{
+			autosuggest(request,response);
+			return;
+		}
+		
 		String azione=request.getParameter("cmdAzione");
 		
 		if(request.getParameter("loadConcept")!=null)
@@ -70,7 +66,7 @@ public class CtrlConcept extends HttpServlet {
 		{
 			deleteConcept(request,response);
 		}
-		else if(azione.equals("edit Broader")||azione.equals("edit PrefLabel"))
+		else if(azione.equals("edit Broader")||azione.equals("edit PrefLabel")||azione.equals("edit AltLabel"))
 		{
 			editConcept(request,response);
 		}
@@ -120,9 +116,16 @@ public class CtrlConcept extends HttpServlet {
 					 c=new concept((String)request.getSession().getAttribute("beanConcept"),false);	
 				}
 				else{
+					if(request.getParameter("loadConcept").equals("Root"))
+					{
+						showTopTerm(request,response);
+						return;
+					}
+					else{
 						HttpSession oSessione=request.getSession();
 						oSessione.setAttribute("beanConcept",request.getParameter("loadConcept"));
-						 c=new concept(request.getParameter("loadConcept"),false);
+						c=new concept(request.getParameter("loadConcept"),false);
+					}
 				}
 						
 		      
@@ -210,40 +213,77 @@ public class CtrlConcept extends HttpServlet {
 	private void editConcept(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException 
     {
 		thesaurus.setThes((String)request.getSession().getAttribute("beanThes"));
-		
+
 		concept c=new concept(request.getParameter("descrittoreHidden"), true);
-		ArrayList<String> broader=new ArrayList<>();
-		
-		String exdescrittore=c.getConcept();
-		
-		c.setConcept(request.getParameter("displayName"));
-		c.setDescrittore(request.getParameter("displayName"));
-		
-		String exbroader=null;
-		if(c.getBroader()!=null)
+		if(request.getParameter("cmdAzione").equals("edit AltLabel"))
 		{
-			exbroader=c.getBroader().get(0);
-		}
-		
-		if(request.getParameter("displayBroader").equals(""))
-		{
-			broader=null;
+			if(request.getParameterValues("altlabels")!=null)
+			{
+				ArrayList<String> a = new ArrayList<String>(Arrays.asList(request.getParameterValues("altlabels")));
+				ArrayList<String> b = new ArrayList<>();
+				for(int i=0; i<a.size(); i++)
+				{
+					if(!a.get(i).equals(""))
+					{
+						b.add(a.get(i));
+					}
+				}
+				c.setAltLabel(b);
+				c.editAltLabel();
+			}
 		}
 		else
 		{
-			broader.add(request.getParameter("displayBroader"));
-		}
 		
-		c.setBroader(broader);
-	 
-		String errore=c.edit(exbroader,exdescrittore);
-		request.setAttribute("error", errore);
-		if(!errore.equals("-1")&&!errore.equals("-2")&&!errore.equals("-3")&&!errore.equals("-4"))
-		{
-			request.getSession().setAttribute("beanConcept",errore);
-		}
+			ArrayList<String> broader=new ArrayList<>();
+			
+			String exdescrittore=c.getConcept();
+			
+			c.setConcept(request.getParameter("displayName"));
+			c.setDescrittore(request.getParameter("displayName"));
+			
+			String exbroader=null;
+			if(c.getBroader()!=null)
+			{
+				exbroader=c.getBroader().get(0);
+			}
+			
+			if(request.getParameter("displayBroader").equals(""))
+			{
+				broader=null;
+			}
+			else
+			{
+				broader.add(request.getParameter("displayBroader"));
+			}
+			
+			c.setBroader(broader);
+		 
+			String errore=c.edit(exbroader,exdescrittore);
+			request.setAttribute("error", errore);
+			if(!errore.equals("-1")&&!errore.equals("-2")&&!errore.equals("-3")&&!errore.equals("-4"))
+			{
+				request.getSession().setAttribute("beanConcept",errore);
+			}
+			
+		}	
 		
 		showConcept(request, response);	
 		
     }
+	
+	private void autosuggest(HttpServletRequest request,HttpServletResponse response) throws IOException
+	{
+		thesaurus.setThes((String)request.getSession().getAttribute("beanThes"));
+		response.setContentType("application/json");
+		
+		String q = request.getParameter("term");
+		
+		PrintWriter writer = response.getWriter();
+		ArrayList<String> a = model.session.concept.getSuggest(q, "5");
+		String s=new Gson().toJson(a);
+		
+		writer.write(s);
+	}
+	
 }

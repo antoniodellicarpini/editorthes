@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
@@ -12,6 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.solr.client.solrj.SolrServerException;
+
+import com.google.gson.Gson;
 
 import model.session.thesaurus;
 
@@ -51,6 +54,16 @@ public class CtrlMain extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		if(request.getParameter("term")!=null && request.getParameter("term").equals("parametro"))
+		{
+			ArrayList<String> elenco_Thes=new ArrayList<>();
+			elenco_Thes=thesaurus.elenco();
+			PrintWriter writer = response.getWriter();
+			String s=new Gson().toJson(elenco_Thes);
+			writer.write(s);
+			return;
+		}
 		
 		String selectedValue=request.getParameter("cmdAzione");
 		if(selectedValue!=null)

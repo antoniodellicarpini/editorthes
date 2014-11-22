@@ -82,6 +82,7 @@ public class conceptSet {
 	
 	public static ArrayList<String> getTopTerm(String thes)
 	{
+		
 		connection conn=connection.getInstance();
 		conn.open(thes);
 		SolrQuery query = new SolrQuery();
@@ -94,6 +95,7 @@ public class conceptSet {
 	     // TODO Auto-generated catch block
 	     e.printStackTrace();
 	    }
+	  
 	    SolrDocumentList results = response.getResults();
 	    HashSet<String> elencoTopTerm=new HashSet<>();
 	    for (int i=0; i<results.size();i++)
@@ -394,8 +396,13 @@ public class conceptSet {
 			return "-3";
 		
 		Stemmer s=null;
+		Stemmer s2=null;
 		try {
 			s = new Stemmer(this.descrittore);
+			if(this.broader!=null){
+				s2 = new Stemmer(this.broader.get(0));
+				this.broader.set(0, s2.getIndexS());
+			}
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -557,15 +564,22 @@ public class conceptSet {
 		}
 	}
 	
-	public boolean checkRel(String concept )
+	//funzione che controlla se stiamo spostando un concept sotto uno dei suoi figli
+	public boolean checkRel(String concept)
 	{
+		//se lo stiamo spostando come TopTerm allora nn serve eseguire il controllo
+		if(this.broader==null)
+		{
+			return true;
+		}
 		conceptSet c = new conceptSet(concept, false);
 		if(c.narrower!=null)
 		 {
+			
 			for(int i=0; i<c.narrower.size();i++)
 			{  
 				conceptSet cnar=new conceptSet(c.narrower.get(i),false);
-				if(cnar.descrittore.equals(this.broader.get(0)))
+				if(cnar.concept.equals(this.broader.get(0)))
 					return false;
 				if(!checkRel(c.narrower.get(i))){
 					return false;
@@ -602,6 +616,10 @@ public class conceptSet {
 	    
 	    return a;
 	    
+	}
+	
+	public void editAltLabel(){
+		update(this);
 	}
 	
 }
