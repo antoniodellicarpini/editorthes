@@ -21,7 +21,7 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.output.*;
 
-import utils.SkosThes2SolrIndex;
+import utils.Import;
 
 @WebServlet("/CtrlImport")
 public class CtrlImport extends HttpServlet {
@@ -109,7 +109,7 @@ public class CtrlImport extends HttpServlet {
          }
       }
       
-      SkosThes2SolrIndex sk = new SkosThes2SolrIndex(connection.getInstance().server, nameFile);
+      Import sk = new Import(connection.getInstance().server, nameFile);
       
       out.println("</body>");
       out.println("</html>");
