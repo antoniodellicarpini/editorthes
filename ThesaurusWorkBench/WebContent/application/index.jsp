@@ -76,7 +76,9 @@
 <div id="header">
 <div id="thesaurus" class="vocimenu">THESAURUS</div>
 <div id="import" class="vocimenu">IMPORT</div>
+<form method="post" name="formExport" id="formExport" action="/ThesaurusWorkBench/CtrlExport">
 <div id="export" class="vocimenu">EXPORT</div>
+</form>
 </div>
 <div id=searchBar>
 <form method="post" name="searchOperation" id="searchOperations" action="/ThesaurusWorkBench/CtrlConcept" >
