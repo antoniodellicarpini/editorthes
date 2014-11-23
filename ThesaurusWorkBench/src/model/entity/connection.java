@@ -4,8 +4,8 @@ import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.impl.HttpSolrServer;
 
 public class connection {
-	SolrServer server;
-	String Thes;
+	public SolrServer server;
+	public String Thes;
 	
 	private static connection instance = null;
 	   protected connection() {

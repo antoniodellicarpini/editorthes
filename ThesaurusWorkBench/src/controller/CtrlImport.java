@@ -11,24 +11,32 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
  
 
+
+
+import model.entity.connection;
+
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.output.*;
 
+import utils.SkosThes2SolrIndex;
+
 @WebServlet("/CtrlImport")
 public class CtrlImport extends HttpServlet {
    
    private boolean isMultipart;
    private String filePath;
-   private int maxFileSize = 50 * 1024;
-   private int maxMemSize = 4 * 1024;
+   private int maxFileSize = 10000 * 1024;
+   private int maxMemSize = 10000 * 1024;
    private File file ;
 
    public void init( ){
       // Get the file location where it would be stored.
-      filePath = "C:\\Users\\Public\\"; 
+	  //System.out.println(getServletContext().getRealPath("/filepathInContext"));
+	  
+      filePath = "C://Users//Public//"; 
    }
    public void doPost(HttpServletRequest request, 
                HttpServletResponse response)
@@ -52,7 +60,7 @@ public class CtrlImport extends HttpServlet {
       // maximum size that will be stored in memory
       factory.setSizeThreshold(maxMemSize);
       // Location to save data that is larger than maxMemSize.
-      factory.setRepository(new File("C:\\Users\\Public\\"));
+      factory.setRepository(new File("C://Users//Public//"));
 
       // Create a new file upload handler
       ServletFileUpload upload = new ServletFileUpload(factory);
@@ -65,7 +73,7 @@ public class CtrlImport extends HttpServlet {
 	
       // Process the uploaded file items
       Iterator i = fileItems.iterator();
-
+      String nameFile=null;
       out.println("<html>");
       out.println("<head>");
       out.println("<title>Servlet upload</title>");  
@@ -83,17 +91,26 @@ public class CtrlImport extends HttpServlet {
             boolean isInMemory = fi.isInMemory();
             long sizeInBytes = fi.getSize();
             // Write the file
+            
             if( fileName.lastIndexOf("\\") >= 0 ){
                file = new File( filePath + 
                fileName.substring( fileName.lastIndexOf("\\"))) ;
+               nameFile=filePath + 
+                       fileName.substring( fileName.lastIndexOf("\\"));
             }else{
                file = new File( filePath + 
                fileName.substring(fileName.lastIndexOf("\\")+1)) ;
+               nameFile=filePath + 
+                       fileName.substring(fileName.lastIndexOf("\\")+1);
             }
             fi.write( file ) ;
             out.println("Uploaded Filename: " + fileName + "<br>");
+            
          }
       }
+      
+      SkosThes2SolrIndex sk = new SkosThes2SolrIndex(connection.getInstance().server, nameFile);
+      
       out.println("</body>");
       out.println("</html>");
    }catch(Exception ex) {
