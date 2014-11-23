@@ -92,9 +92,7 @@ public class CtrlConcept extends HttpServlet {
 		    	  HttpSession oSessione=request.getSession();
 				  oSessione.setAttribute("beanThes",request.getAttribute("selectedValue"));
 		         }
-		        ArrayList<String> elenco_Thes=new ArrayList<>();
-				elenco_Thes=thesaurus.elenco();
-				request.setAttribute("elenco_Thes", elenco_Thes);
+		        
 			  //Condivisione Elenco de concept
 			  request.setAttribute("elencoConcept", elenco);
 			  //Visualizzare la pagina 
@@ -139,9 +137,6 @@ public class CtrlConcept extends HttpServlet {
 			  request.setAttribute("note", c.getNote());
 			  request.setAttribute("related", c.getRelated());
 			  
-			  ArrayList<String> elenco_Thes=new ArrayList<>();
-			  elenco_Thes=thesaurus.elenco();
-			  request.setAttribute("elenco_Thes", elenco_Thes);
 				
 			  ServletContext oContesto = getServletContext();
 			//Visualizzare la pagina 
