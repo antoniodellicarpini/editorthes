@@ -32,12 +32,7 @@ $(function () {
 	                	for (var i = 0; i < jsonData.length; i++) {
 	                		
 	                	    $("#thesauri").append('<div class="thes" onClick=selectThes("'+jsonData[i]+'")> <div class="nameThes">'+jsonData[i]+'</div></div>');
-	                	}
-	                	
-	                	
-	                	
-	                	
-	                        
+	                	}      
 	                }
 		    	});
 		    	
@@ -64,6 +59,11 @@ $(function () {
 
 		    $("#openBroader").click(function () {
 		        $("#dialogBroader").dialog('open');
+		    });
+		    
+		    
+		    $("#export").click(function () {
+		    	document.getElementById("formExport").submit();
 		    });
 		    
 		    
