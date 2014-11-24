@@ -91,9 +91,9 @@ public class concept {
 	public concept(){
 		init();
 	}
-	public concept(String concept,boolean broader)
+	public concept(String concept,boolean stemmer)
 	{
-		init(concept,broader);
+		init(concept,stemmer);
 	}
 	
 	

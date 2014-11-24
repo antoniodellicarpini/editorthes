@@ -2,9 +2,13 @@ package utils;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLEncoder;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
+import model.entity.connection;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -28,7 +32,7 @@ public class Stemmer {
 	public Stemmer(String v) throws IOException, ParserConfigurationException, SAXException{	
 	
 		setValue(v);
-		URL url = new URL("http://localhost:8983/solr/thesaurus/analysis/field?analysis.fieldtype=text_it&analysis.fieldvalue="+URLEncoder.encode(value,"UTF-8"));
+		URL url = new URL(connection.getInstance().server+"/analysis/field?analysis.fieldtype=text_it&analysis.fieldvalue="+URLEncoder.encode(value,"UTF-8"));
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db = dbf.newDocumentBuilder();
 		Document doc = db.parse(url.openStream());

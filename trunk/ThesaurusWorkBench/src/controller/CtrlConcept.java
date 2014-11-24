@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import utils.Stemmer;
+import model.entity.connection;
 import model.session.concept;
 import model.session.thesaurus;
 
@@ -46,11 +47,23 @@ public class CtrlConcept extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		
 		if(request.getParameter("term")!=null)
 		{
 			autosuggest(request,response);
 			return;
 		}
+		if(!connection.getInstance().checkConnection())
+		{
+			request.setAttribute("error",10);
+			ServletContext oContesto = getServletContext();
+			//Visualizzare la pagina 
+			 RequestDispatcher oDispatcher = oContesto.getRequestDispatcher("/application/index.jsp");
+			 oDispatcher.forward(request, response);
+			 return;
+			
+		}
+		
 		
 		String azione=request.getParameter("cmdAzione");
 		
@@ -274,11 +287,33 @@ public class CtrlConcept extends HttpServlet {
 		
 		String q = request.getParameter("term");
 		
-		PrintWriter writer = response.getWriter();
-		ArrayList<String> a = model.session.concept.getSuggest(q, "5");
-		String s=new Gson().toJson(a);
 		
-		writer.write(s);
+		PrintWriter writer = response.getWriter();
+		ArrayList<String> a=new ArrayList<>();
+		String s=null;
+		if(!checkConnection())
+		{
+			a.add("connessione assente");
+			s=new Gson().toJson(a);
+			writer.write(s);
+		}
+		else{
+			a=model.session.concept.getSuggest(q,"5");
+			 s=new Gson().toJson(a);
+			writer.write(s);
+			}
+		return;
 	}
+	
+	public boolean checkConnection()
+	{
+		if(!connection.getInstance().checkConnection())
+		{    
+			 return false;
+		}
+		return true;
+		
+	}
+
 	
 }

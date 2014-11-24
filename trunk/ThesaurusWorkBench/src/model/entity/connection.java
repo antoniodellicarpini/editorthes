@@ -1,7 +1,15 @@
 package model.entity;
 
+import java.io.IOException;
+
+import model.entity.conn.XMLParserFactory;
+
 import org.apache.solr.client.solrj.SolrServer;
+import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrServer;
+import org.apache.solr.client.solrj.request.CoreAdminRequest;
+import org.apache.solr.client.solrj.response.CoreAdminResponse;
+import org.apache.solr.common.params.CoreAdminParams.CoreAdminAction;
 
 public class connection {
 	public SolrServer server;
@@ -23,13 +31,37 @@ public class connection {
 	
 	public void open()
 	{
-		this.server = new HttpSolrServer("http://localhost:8983/solr");
+		this.server = new HttpSolrServer(XMLParserFactory.getIstance().getHost());
+			
 	}
 	
 	public void open(String Thes)
 	{
 		this.Thes=Thes;
-		this.server = new HttpSolrServer("http://localhost:8983/solr/"+this.Thes);
+		this.server = new HttpSolrServer(XMLParserFactory.getIstance().getHost()+this.Thes);
+	}
+
+	
+	public boolean checkConnection()
+	{
+		System.out.println("ca");
+		System.out.println(XMLParserFactory.getIstance().getHost());
+		SolrServer s= new HttpSolrServer(XMLParserFactory.getIstance().getHost());
+		CoreAdminRequest request = new CoreAdminRequest();
+		request.setAction(CoreAdminAction.STATUS);
+		CoreAdminResponse cores = null;
+		try {
+			cores = request.process(s);
+		} catch (SolrServerException e) {
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
+			return false;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 
 }

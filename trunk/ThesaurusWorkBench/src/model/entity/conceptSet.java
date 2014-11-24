@@ -8,6 +8,7 @@ import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.SolrQuery.ORDER;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.response.TermsResponse;
@@ -34,11 +35,11 @@ public class conceptSet {
 	
 	public conceptSet(){}
 	
-	public conceptSet(String concept,boolean broader)
+	public conceptSet(String concept,boolean stemmer)
     { 
 		
 		SolrQuery query = new SolrQuery();
-		if(!broader){
+		if(!stemmer){
 			try {
 				Stemmer s=new Stemmer(concept);
 				concept=s.getIndexS();
@@ -54,6 +55,7 @@ public class conceptSet {
 			}
 	    }
 	    query.setQuery("descrittore:\""+concept+"\"");
+	    query.addSort("descrittore", ORDER.asc);
 	   
 	    query.setParam("rows","10000");
 	    QueryResponse response = null;
@@ -84,9 +86,11 @@ public class conceptSet {
 	{
 		
 		connection conn=connection.getInstance();
+		
 		conn.open(thes);
 		SolrQuery query = new SolrQuery();
 	    query.setQuery("*:*");
+	    query.addSort("descrittore", ORDER.asc);
 	    query.setParam("rows","10000");
 	    QueryResponse response = null;
 	    try {

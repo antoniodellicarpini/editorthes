@@ -16,6 +16,7 @@ import org.apache.solr.client.solrj.SolrServerException;
 
 import com.google.gson.Gson;
 
+import model.entity.connection;
 import model.session.thesaurus;
 
 /**
@@ -56,18 +57,37 @@ public class CtrlMain extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		if(request.getParameter("term")!=null && request.getParameter("term").equals("parametro"))
-		{
-			ArrayList<String> elenco_Thes=new ArrayList<>();
-			elenco_Thes=thesaurus.elenco();
+		{   
 			PrintWriter writer = response.getWriter();
-			String s=new Gson().toJson(elenco_Thes);
-			writer.write(s);
+			ArrayList<String> elenco_Thes=new ArrayList<>();
+			String s=null;
+			if(!checkConnection())
+			{
+				elenco_Thes.add("connessione assente");
+				s=new Gson().toJson(elenco_Thes);
+				writer.write(s);
+			}
+			else{
+				elenco_Thes=thesaurus.elenco();
+				 s=new Gson().toJson(elenco_Thes);
+				writer.write(s);
+				}
 			return;
 		}
 		
 		String selectedValue=request.getParameter("cmdAzione");
 		if(selectedValue!=null)
         {
+			if(!checkConnection())
+			{
+				//Definizione di un oggetto della classe ServletContext
+				   ServletContext oContesto = getServletContext();
+				   //Definizione di un oggetto per la pubblicazione della JSP
+				   request.setAttribute("error",10);
+				   RequestDispatcher oDispatcher = oContesto.getRequestDispatcher("/application/index.jsp");
+				   oDispatcher.forward(request,response);
+				   return;
+			}
 			   //Definizione di un oggetto della classe ServletContext
 			   ServletContext oContesto = getServletContext();
 			   //Definizione di un oggetto per la pubblicazione della JSP
@@ -81,12 +101,26 @@ public class CtrlMain extends HttpServlet {
 	
 	private void viewPage(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
 		ArrayList<String> elenco_Thes=new ArrayList<>();
-		elenco_Thes=thesaurus.elenco();
-		request.setAttribute("elenco_Thes", elenco_Thes);
+		
+		// qui vado a riprendere il server che ho dalla mia configurazione e controllo se c'è la connessione
+		//se non c'è la connessione allora mando il segnale di errore
+	
+		
 		// TODO Auto-generated method stub
 			ServletContext oContesto = getServletContext();
 			RequestDispatcher oDispatcher = oContesto.getRequestDispatcher("/application/index.jsp");
 			oDispatcher.forward(request, response);		
+	
+	}
+	
+	public boolean checkConnection()
+	{
+		if(!connection.getInstance().checkConnection())
+		{    
+			 return false;
+		}
+		return true;
+		
 	}
 
 }
