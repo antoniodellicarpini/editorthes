@@ -16,28 +16,29 @@ $(function () {
 		    });
 
 		    $("#thesaurus").click(function () {
-		    	
-		    	
 		    	$.ajax({
 	                url : "/ThesaurusWorkBench/CtrlMain",
 	                type : "POST",
 	                data : {
 	                        term : "parametro"
 	                },
-	                
-	                success : function(data) {
-	                	
+	                success : function(data) {	                	
 	                	jsonData = JSON.parse(data);
-	            
-	                	for (var i = 0; i < jsonData.length; i++) {
-	                		
-	                	    $("#thesauri").append('<div class="thes" onClick=selectThes("'+jsonData[i]+'")> <div class="nameThes">'+jsonData[i]+'</div></div>');
-	                	}      
+	                	if(jsonData[0]=="connessione assente")
+	                	{
+	                			alert(jsonData[0]);
+	                	}
+	                	else{
+	                		$("#dialog").dialog('open');
+		                	for (var i = 0; i < jsonData.length; i++) {
+		                	    $("#thesauri").append('<div class="thes" onClick=selectThes("'+jsonData[i]+'")> <div class="nameThes">'+jsonData[i]+'</div></div>');
+		                	}   
+	                	}  
 	                }
 		    	});
 		    	
 		    	
-		        $("#dialog").dialog('open');
+		        
 		    });
 		    
 		    
@@ -190,7 +191,16 @@ $(function () {
                 },
                 dataType : "json",
                 success : function(data) {
-                        response(data);
+                	
+                	if(data=="connessione assente")
+                	{
+                			alert(data);
+                	}
+                	else{
+                		 response(data);
+                	}
+                		
+                       
                 }
         });
 		},
@@ -223,7 +233,15 @@ $(function () {
                 },
                 dataType : "json",
                 success : function(data) {
-                        response(data);
+                	
+                	if(data=="connessione assente")
+                	{
+                			alert(data);
+                	}
+                	else{
+                		 response(data);
+                	}
+                  
                 }
         });
 		},

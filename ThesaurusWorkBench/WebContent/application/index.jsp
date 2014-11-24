@@ -75,10 +75,23 @@
 
 <div id="header">
 <div id="thesaurus" class="vocimenu">THESAURUS</div>
-<div id="import" class="vocimenu">IMPORT</div>
-<form method="post" name="formExport" id="formExport" action="/ThesaurusWorkBench/CtrlExport">
-<div id="export" class="vocimenu">EXPORT</div>
-</form>
+
+<% if(request.getSession().getAttribute("beanThes")==null) { %>
+	<div id="" class="vocimenu">IMPORT</div>
+	<form method="post" name="formExport" id="formExport" action="/ThesaurusWorkBench/CtrlExport">
+	<div id="" class="vocimenu">EXPORT</div>
+	</form>
+	<%
+	}
+else{%>
+	
+	<div id="import" class="vocimenu">IMPORT</div>
+	<form method="post" name="formExport" id="formExport" action="/ThesaurusWorkBench/CtrlExport">
+	<div id="export" class="vocimenu">EXPORT</div>
+	</form>
+    
+   <% }%>
+
 </div>
 <div id=searchBar>
 <form method="post" name="searchOperation" id="searchOperations" action="/ThesaurusWorkBench/CtrlConcept" >
@@ -165,7 +178,15 @@
 		     	<div id="cmdCreaDelete"> 
 		     	
 		     			<input type ="submit" class="buttonCD"  id="create" name="cmdAzione" value="Create Concept">
-	                                <input type ="submit" class="buttonCD" id="delete"   name="cmdAzione" value="Delete Concept">
+		     			<% if(request.getAttribute("descrittore")!=null)
+		     			{%> 
+		     				<input type ="submit" class="buttonCD" id="delete"   name="cmdAzione" value="Delete Concept">
+		     			<%}
+		     			 else { %>
+		     				 <input type ="submit" class="buttonCD" id="delete"   name="cmdAzione" value="Delete Concept" disabled>
+		     				
+		     			<% } %>
+	                 		   
 	            </div>
 		     </div>
 			
@@ -309,6 +330,12 @@ function errorFunction() {
 		{
 			%>
 			alert("non puoi spostare te stesso sotto te stesso");
+			<%
+		}
+		else if(request.getAttribute("error").toString().equals("10"))
+		{
+			%>
+			alert("connessione assente");
 			<%
 		}
 	}
