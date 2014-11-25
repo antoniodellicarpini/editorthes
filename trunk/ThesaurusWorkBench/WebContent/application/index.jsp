@@ -14,7 +14,9 @@
 	<link rel="stylesheet" href="application/css/jquery-ui.css">
 	<script src="application/js/jquery-1.10.2.js"></script>
 	<script src="application/js/jquery-ui.js"></script>
-	<script src="application/js/script.js"></script>	
+	<script src="application/js/script.js"></script>
+	
+		
 </head>
 <body onload="errorFunction()">
 
@@ -34,13 +36,26 @@
 			<input type="submit" value="Upload File" />
 		</form>
 	</div>
+	<div id="dialogSettings">
+		<h3>Settings:</h3>
+		
+		<form method="post" name="formsettings" id="formsettings" action="/ThesaurusWorkBench/CtrlSettings">
+		<div class="content">
+		<input type="text" id="address" name="address" value="" />
+		<input type="submit" value="switch" />
+		</div>
+     	</form>
+
+		
+			</div>
 
 
 	<div id="dialogBroader">
 	<form method="post" name="editBroader" id="editBroader" action="/ThesaurusWorkBench/CtrlConcept" >
 	    <div class="content">
-			<input type="text" id="inputBroader" name="displayBroader" value="" />	
-			<input type ="submit" id="submitBroader" name="cmdAzione"  value="edit Broader"/>
+			<label>Choose new broader:</label>
+			<input type="text" id="inputBroader" name="displayBroader" value="" />
+			<input Style="visibility:hidden" type ="submit" id="submitBroader" name="cmdAzione"  value="edit Broader"/>
 			<input type="hidden" name="descrittoreHidden" value="<%=request.getAttribute("descrittore")%>"/>
 			<input type="hidden" value="<%=request.getAttribute("concept")%>" name="displayName"/>
 	  </div>
@@ -56,15 +71,18 @@
 				ArrayList<String> sinonimi = ((ArrayList)request.getAttribute("altLabel"));
 				for(int i=0; i<sinonimi.size(); i++)
 				{%>
-					<input type="text" name="altlabels" value="<%= sinonimi.get(i) %>">
+					<div><input type="text" name="altlabels" value="<%= sinonimi.get(i) %>"></div>
+			
 				<%}
 									
 			} %>
 				
 				<div class="input_fields_wrap">
-    				<button class="add_field_button">Add More Fields</button>
-    			<div><input type="text" name="altlabels"></div>
-				</div>
+    			  <div>
+    			   <input type="text" name="altlabels">
+    			  </div>
+    			  <button class="add_field_button">Add More Fields</button>
+			 </div>
 				
 			<input type ="submit" name="cmdAzione"  value="edit AltLabel"/>
 			<input type="hidden" name="descrittoreHidden" value="<%=request.getAttribute("descrittore")%>"/>
@@ -77,9 +95,9 @@
 <div id="thesaurus" class="vocimenu">THESAURUS</div>
 
 <% if(request.getSession().getAttribute("beanThes")==null) { %>
-	<div id="" class="vocimenu">IMPORT</div>
+	<div id="disableImport" class="vocimenu">IMPORT</div>
 	<form method="post" name="formExport" id="formExport" action="/ThesaurusWorkBench/CtrlExport">
-	<div id="" class="vocimenu">EXPORT</div>
+	<div id="disableExport" class="vocimenu">EXPORT</div>
 	</form>
 	<%
 	}
@@ -92,6 +110,8 @@ else{%>
     
    <% }%>
 
+	<div id="settings" class="vocimenu">SETTINGS</div>
+	
 </div>
 <div id=searchBar>
 <form method="post" name="searchOperation" id="searchOperations" action="/ThesaurusWorkBench/CtrlConcept" >
@@ -106,24 +126,46 @@ else{%>
 
 		
 		<form method="post" action="/ThesaurusWorkBench/CtrlConcept">
+		
 			<!-- Column 2 start -->
-			<% if(request.getAttribute("descrittore")!=null)
+			<% int margin=10;
+			if ((request.getAttribute("descrittore")==null)&&(request.getAttribute("elencoConcept")!=null))
 					{ %>
-				
-				<div id="conceptB" class="concept"><%= request.getAttribute("concept")%></div>
+					<input type ="submit" style="border-radius:0px; background-color:#0092ca;" class="concept" name="loadConcept" value="Root"/>
+					<br/>
+			
+			<%}
+							
+			 if(request.getAttribute("descrittore")!=null)
+					{ 
+			         String[] s= ((String)(((ArrayList)request.getAttribute("hierarchy"))).get(0)).split("/");
+				    %>
+				<input type ="submit" style="border-radius:0px; background-color:#0092ca;" class="concept" name="loadConcept" value="Root"/>
+				<br/> 
+				<% 
+				for(int i=0;i<s.length-1;i++)
+				{ 
+					margin=margin+10;
+				%>
+					
+					<input style="margin-left:<%=margin%>px" type ="submit" class="concept" name="loadConcept" value="<%= s[i]%>"/> 
+					<br/>
+				<%}%>
+				<input type ="submit" id="conceptB" style="margin-left:<%=margin+10%>px; background-color:#ff9900;" class="concept" value="<%= request.getAttribute("concept")%>" />
 				<br/>
 				
 				<%	}
 				 %>
-			<% if( request.getAttribute("elencoConcept")!=null) 
+			<% if( request.getAttribute("elencoConcept")!=null)
 				{
-				 ArrayList elencoConcept= (ArrayList) request.getAttribute("elencoConcept");
+				%>
+		     	 <%	 ArrayList elencoConcept= (ArrayList) request.getAttribute("elencoConcept");
 				 
 				 for (int i=0; i<elencoConcept.size(); i++)
 				   {  	 
 				 %>
 				 
-        <input type ="submit" class="concept" name="loadConcept" value="<%= elencoConcept.get(i)%>"/> 
+        <input type ="submit" style="margin-left:<%=margin+10%>px; background-color:#76b0ab;" class="concept" name="loadConcept" value="<%= elencoConcept.get(i)%>"/> 
 		<br/> 
 				 <%
 					} 
@@ -138,24 +180,12 @@ else{%>
 		<form method="post" action="/ThesaurusWorkBench/CtrlConcept">
 		
 		<% if(request.getSession().getAttribute("beanThes")==null)
-			 { %><div id="headerDescription"> Seleziona un Thesaurus			                                 
-					                            </div>
+			 { %><div id="headerDescription"> Seleziona un Thesaurus </div>
 			<%}	
 				                          
 		else{ %> 
 				
-			<%
-			if(request.getAttribute("descrittore")!=null)
-			{
-				String[] s= ((String)(((ArrayList)request.getAttribute("hierarchy"))).get(0)).split("/");
-				%>
-				<input type ="submit" class="concept" name="loadConcept" value="Root"/> 
-				<%
-				for(int i=0;i<s.length;i++)
-				{%>
-					<input type ="submit" class="concept" name="loadConcept" value="<%= s[i]%>"/> 
-				<%}
-			}%>
+			
 			</form>
 			
 			
@@ -215,8 +245,8 @@ else{%>
 				   
 				   <div id="prefLabel" class="element">
 							<div class="list_element">
-								<h1>Preferred Label</h1>
-									<div id="nomePrefLabel" class="element_of_predicate"><%=request.getAttribute("concept")%></div>
+								<p class="labelSection">Preferred Label: <b> <%=request.getAttribute("concept")%></b></p>
+									<!--  <div id="nomePrefLabel" class="element_of_predicate"><%=request.getAttribute("concept")%></div>-->
 							</div>
 							<div class="edit">	
 										<input type="hidden" value="<%=request.getAttribute("concept")%>" name="displayName"/>
@@ -226,46 +256,55 @@ else{%>
 				    
 				    <div id="broader" class="element">
 							<div class="list_element">
-								<h1>Broader Concept</h1>
+								<p class="labelSection">Broader Concept:
 									
-			<div id="nomeBroader" class="element_of_predicate">
+			
 							<% if(request.getAttribute("broader")!=null) 
 								{	
 									String[] gerarchia = ((String)((ArrayList)request.getAttribute("hierarchy")).get(0)).split("/");
 									String broader = gerarchia[gerarchia.length-2];
 									
 								%>
-									<h5><%=broader%></h5>	    
+									<b><%=broader%></b>	    
 									<input type="hidden" value="<%=broader%>" name="displayBroader"/>
 										    
 										<%} 
 									 else{%>
-									       Top Concept
+									       <b>Top Concept</b>
 									       <input type="hidden" value="" name="displayBroader"/>
 									     <%}%>
-									</div>
-									
-									<div class="edit">
+			
+			</p>						
+																		
+							</div>
+							<div class="edit">
 										<input type ="submit"  name="cmdAzione" id="openBroader" class="buttonEdit" value="edit Broader"/>
 									
 									</div>
-									
-							</div>
 				    </div>
 				    
 				    
 			<div id="altlabel" class="element">
 							<div class="list_element">
-								<h1>Alternative Labels</h1>
+								<p class="labelSection">Alternative Labels:
 									
-			<div id="sinonimi" class="element_of_predicate">
+			
 							<% if(request.getAttribute("altLabel")!=null) 
 								{	
 									ArrayList<String> sinonimi = ((ArrayList)request.getAttribute("altLabel"));
+									
 									for(int i=0; i<sinonimi.size(); i++)
 									{%>
-										<p><%= sinonimi.get(i) %></p>
+									<%if(i==0) 
+									{
+									%>
+										<b><%= sinonimi.get(i) %></b>
 									<%}
+									else{%>
+										<b>, <%= sinonimi.get(i) %></b>
+									<%} %>	
+									
+								<%}
 									
 									    
 								} 
@@ -273,14 +312,12 @@ else{%>
 									       
 									       
 									     <%}%>
-									</div>
-									
-									<div class="edit">
+								</p>
+							</div>
+							<div class="edit">
 										<input type ="submit"  name="cmdAzione" id="openAltLabel" class="buttonEdit" value="edit AltLabel"/>
 									
 									</div>
-									
-							</div>
 				    </div>
 				   
 				   
