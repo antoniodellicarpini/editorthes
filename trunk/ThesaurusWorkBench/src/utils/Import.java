@@ -24,7 +24,18 @@ public class Import {
 	private SKOSDataFactory df;
 	
     public Import(SolrServer server, String filePath)  {
-      
+           
+    	   try {
+			server.deleteByQuery("*:*");
+			 server.commit();
+		} catch (SolrServerException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+    	  
             SKOSManager man = null;
 			try {
 				man = new SKOSManager();
