@@ -30,8 +30,10 @@ $(function () {
 	                	}
 	                	else{
 	                		$("#dialog").dialog('open');
+	                		$("#thesauri").html('');
 		                	for (var i = 0; i < jsonData.length; i++) {
-		                	    $("#thesauri").append('<div class="thes" onClick=selectThes("'+jsonData[i]+'")> <div class="nameThes">'+jsonData[i]+'</div></div>');
+		                		 $("#thesauri").append('<div class="thes" onClick=selectThes("'+jsonData[i]+'")> <div class="nameThes">'+jsonData[i]+'</div></div>');
+		                		
 		                	}   
 	                	}  
 	                }
@@ -45,7 +47,7 @@ $(function () {
 		    $("#dialogBroader").dialog({
 		        autoOpen: false,
 		         modal: true,
-		        height: 500,
+		        height: 200,
 		        width: 500,
 		        show: {
 		            
@@ -67,6 +69,26 @@ $(function () {
 		    	document.getElementById("formExport").submit();
 		    });
 		    
+		   
+		    $("#dialogSettings").dialog({
+		        autoOpen: false,
+		         modal: true,
+		        height: 500,
+		        width: 500,
+		        show: {
+		            
+		            duration: 400,
+		        },
+		        
+		       
+		        open: function (event, ui) {
+		            $('#content');
+		        }
+		    });
+		    
+		    $("#settings").click(function () {
+		        $("#dialogSettings").dialog('open');
+		    });
 		    
 		    
 		    $("#dialogAltLabel").dialog({
@@ -79,7 +101,6 @@ $(function () {
 		            duration: 400,
 		        },
 		        
-		       
 		        open: function (event, ui) {
 		            $('#content');
 		        }
@@ -138,7 +159,7 @@ $(function () {
 					}
 					if(submitActor.value=="Create Concept")
 					{
-						var person = prompt("Please enter description","Insert descr"); 
+						var person = prompt("Please enter description","Insert concept"); 
 					    if (person!= null) {
 					    	document.crudOperation.descrittoreHidden.value=person;
 					    	return true;	
@@ -356,6 +377,7 @@ $(function () {
 		    $(wrapper).on("click",".remove_field", function(e){ //user click on remove text
 		        e.preventDefault(); $(this).parent('div').remove(); x--;
 		    });
+		   
 		});
 		
 		
