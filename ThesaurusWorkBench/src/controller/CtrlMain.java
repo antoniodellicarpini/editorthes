@@ -96,6 +96,9 @@ public class CtrlMain extends HttpServlet {
 			   oDispatcher.forward(request,response);
         }
 		
+		else 
+			viewPage(request,response);
+		
 	}
 	
 	

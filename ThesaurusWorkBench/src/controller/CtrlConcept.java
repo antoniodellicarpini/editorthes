@@ -67,24 +67,36 @@ public class CtrlConcept extends HttpServlet {
 		
 		String azione=request.getParameter("cmdAzione");
 		
+
+		
 		if(request.getParameter("loadConcept")!=null)
 		{
 			showConcept(request,response);
+			return;
+		}
+		if(azione==null)
+		{
+			showTopTerm(request, response);
+			return;
 		}
 		else if(azione.equals("Create Concept"))
 		{
-		   createConcept(request,response);	
+		   createConcept(request,response);
+		   return;
 		}
 		else if(azione.equals("Delete Concept"))
 		{
 			deleteConcept(request,response);
+			return;
 		}
 		else if(azione.equals("edit Broader")||azione.equals("edit PrefLabel")||azione.equals("edit AltLabel"))
 		{
 			editConcept(request,response);
+			return;
 		}
 		else {
 			showTopTerm(request,response);
+			return;
 			}
 	}
 	

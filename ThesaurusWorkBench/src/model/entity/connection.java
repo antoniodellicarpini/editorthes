@@ -14,6 +14,7 @@ import org.apache.solr.common.params.CoreAdminParams.CoreAdminAction;
 public class connection {
 	public SolrServer server;
 	public String Thes;
+	public String solrServer;
 	
 	private static connection instance = null;
 	   protected connection() {
@@ -39,13 +40,12 @@ public class connection {
 	{
 		this.Thes=Thes;
 		this.server = new HttpSolrServer(XMLParserFactory.getIstance().getHost()+this.Thes);
+		this.solrServer=XMLParserFactory.getIstance().getHost()+this.Thes;
 	}
 
 	
 	public boolean checkConnection()
 	{
-		System.out.println("ca");
-		System.out.println(XMLParserFactory.getIstance().getHost());
 		SolrServer s= new HttpSolrServer(XMLParserFactory.getIstance().getHost());
 		CoreAdminRequest request = new CoreAdminRequest();
 		request.setAction(CoreAdminAction.STATUS);

@@ -32,7 +32,8 @@ public class Stemmer {
 	public Stemmer(String v) throws IOException, ParserConfigurationException, SAXException{	
 	
 		setValue(v);
-		URL url = new URL(connection.getInstance().server+"/analysis/field?analysis.fieldtype=text_it&analysis.fieldvalue="+URLEncoder.encode(value,"UTF-8"));
+		URL url = new URL(connection.getInstance().solrServer+"/analysis/field?analysis.fieldtype=text_it&analysis.fieldvalue="+URLEncoder.encode(value,"UTF-8"));
+		
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db = dbf.newDocumentBuilder();
 		Document doc = db.parse(url.openStream());

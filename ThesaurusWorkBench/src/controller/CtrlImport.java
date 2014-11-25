@@ -3,13 +3,16 @@ package controller;
 import java.io.*;
 import java.util.*;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
  
+
 
 
 
@@ -36,7 +39,7 @@ public class CtrlImport extends HttpServlet {
       // Get the file location where it would be stored.
 	  //System.out.println(getServletContext().getRealPath("/filepathInContext"));
 	  
-      filePath = "C://Users//Public//"; 
+      filePath = "C:/Users/Public/"; 
    }
    public void doPost(HttpServletRequest request, 
                HttpServletResponse response)
@@ -60,7 +63,7 @@ public class CtrlImport extends HttpServlet {
       // maximum size that will be stored in memory
       factory.setSizeThreshold(maxMemSize);
       // Location to save data that is larger than maxMemSize.
-      factory.setRepository(new File("C://Users//Public//"));
+      factory.setRepository(new File("C:/Users/Public/"));
 
       // Create a new file upload handler
       ServletFileUpload upload = new ServletFileUpload(factory);
@@ -104,7 +107,7 @@ public class CtrlImport extends HttpServlet {
                        fileName.substring(fileName.lastIndexOf("\\")+1);
             }
             fi.write( file ) ;
-            out.println("Uploaded Filename: " + fileName + "<br>");
+            
             
          }
       }
@@ -116,6 +119,11 @@ public class CtrlImport extends HttpServlet {
    }catch(Exception ex) {
        System.out.println(ex);
    }
+      
+      ServletContext oContesto = getServletContext(); 
+      RequestDispatcher oDispatcher = oContesto.getRequestDispatcher("/CtrlConcept");
+      oDispatcher.forward(request, response); 
+      
    }
    public void doGet(HttpServletRequest request, 
                        HttpServletResponse response)
